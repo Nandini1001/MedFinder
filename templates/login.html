@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PUNS - Med Finder</title>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <!-- Header -->
+  <section id="header">
+    <a href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='image/logo.jpg') }}" class="logo" alt="Logo" />
+    </a>
+    <div>
+      <ul id="navbar">
+        <li><a href="{{ url_for('index') }}">Home</a></li>
+        <li><a class="active" href="{{ url_for('login') }}">Login</a></li>
+        <!--<li><a href="{{ url_for('find') }}">Find</a></li>-->
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <a href="#" id="close"><i class="far fa-times"></i></a>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Login Container -->
+  <div class="login-container">
+    <form class="login-form" method="POST" action="{{ url_for('login') }}">
+      <hr style="margin: 20px 0;" />
+      <h2 style="text-align: center;">LOGIN</h2>
+
+      <!-- Google Sign-In -->
+      <button type="button" id="google-login" class="google-button">
+        <i class="fab fa-google"></i> Google
+      </button>
+
+      <!-- Guest Option -->
+      <button type="button" id="guest-login" style="margin-top: 20px; background-color: #aaa; color: white;">
+        Continue as Guest
+      </button>
+    </form>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      RecaptchaVerifier,
+      signInWithPhoneNumber,
+      signInAnonymously
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyCOBhB7W5NhsiqpgH_7g4nUnrE6dwe-ueA",
+    authDomain: "medfinder-782ad.firebaseapp.com",
+    projectId: "medfinder-782ad",
+    storageBucket: "medfinder-782ad.firebasestorage.app",
+    messagingSenderId: "525471729907",
+    appId: "1:525471729907:web:bf5a323d019483df0f8f86",
+    measurementId: "G-RVCHLEYVDY"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Google Login
+    document.getElementById("google-login").addEventListener("click", () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          alert(`Welcome ${user.displayName}`);
+          // sessionStorage mein save karo user info
+          sessionStorage.setItem("userName", user.displayName);
+          window.location.href = '/find';
+        })
+        .catch((error) => {
+          console.error("Google login failed:", error.message);
+          alert("Google login failed: " + error.message);
+        });
+    });
+
+    // Guest Login
+    document.getElementById("guest-login").addEventListener("click", () => {
+      signInAnonymously(auth)
+        .then(() => {
+          alert("Continuing as Guest");
+          sessionStorage.setItem("userName", "Guest");
+          window.location.href = '/find';
+        })
+        .catch((error) => {
+          console.error("Guest login failed:", error.message);
+          alert("Guest login failed: " + error.message);
+        });
+    });
+  </script>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
