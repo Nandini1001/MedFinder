@@ -44,3 +44,12 @@ PUNS-medfinder/
 ├─ hashed_med+allergy_separated.csv                         # Medicine data
 └─ README.md              # Project documentation
 ```
+# Steps to Create serviceAccountKey.json from Firebase
+- Go to Firebase Console
+- Select the project you want to use.
+- Click the gear icon next to “Project Overview”.
+- Choose Project Settings.
+- In the top menu, click on Service accounts.
+- Click Generate new private key.
+- A pop-up will appear; click Generate key.
+- Firebase will automatically download a JSON file to your computer. This is your serviceAccountKey.json.
